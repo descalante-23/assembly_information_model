@@ -24,12 +24,12 @@ def assembly_with_interfaces_courses(assembly):
     courses = []
 
     # all element keys
-    elements = set(assembly.graph.nodes())
+    elements = set(assembly.network.nodes())
 
     # base course keys
-    c_min = min(assembly.graph.nodes_attribute(name='z'))
+    c_min = min(assembly.network.nodes_attribute(name='z'))
     #keys_on_bottom = list(assembly.network.nodes_where({'z': c_min}))
-    base = set(assembly.graph.nodes_where({'z': c_min}))
+    base = set(assembly.network.nodes_where({'z': c_min}))
 
     if base:
         courses.append(list(base))
@@ -41,7 +41,7 @@ def assembly_with_interfaces_courses(assembly):
 
         while elements:
 
-            nbrs = set(nbr for key in courses[-1] for nbr in assembly.graph.node_neighbors(key)) #changed to graph.neigborhood or graph.neighborsa
+            nbrs = set(nbr for key in courses[-1] for nbr in assembly.network.node_neighbors(key))
             # print(nbrs)
             course = list(nbrs - seen)
             courses.append(course)
@@ -50,7 +50,7 @@ def assembly_with_interfaces_courses(assembly):
 
     # assign course id's to the corresponding blocks
     for i, course in enumerate(courses):
-        assembly.graph.nodes_attribute(name='course', value=i, keys=course)
+        assembly.network.nodes_attribute(name='course', value=i, keys=course)
     # return courses
 
 

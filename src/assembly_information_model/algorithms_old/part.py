@@ -139,10 +139,8 @@ class Part(Datastructure):
         """
         
         part = cls(name, frame)
-        part.line = line
-        part.attributes['line'] = line 
+        
         part.shape = line
-
 
         return part
 
@@ -281,7 +279,20 @@ class Part(Datastructure):
 
         if 'mesh' in self.attributes.keys():
             return self.attributes['mesh']
-      
+    
+
+    @property
+    def line(self):
+        """Returns a line of the part, if available.
+
+        Returns
+        -------
+        :class:`Line`
+        """
+
+        if 'line' in self.attributes.keys():
+            return self.attributes['line']
+    
 
     @mesh.setter
     def mesh(self, mesh):
@@ -314,28 +325,6 @@ class Part(Datastructure):
         :class:`Shape`
         """
         self.attributes.update({'shape':shape})
-
-    @property
-    def line(self):
-        """Returns a line of the part, if available.
-
-        Returns
-        -------
-        :class:`Line`
-        """
-
-        if 'line' in self.attributes.keys():
-            return self.attributes['line']
-        
-    @line.setter
-    def line(self, line):
-        """Sets the line of the part, if available.
-
-        Parameters
-        ----------
-        :class:`Line`
-        """
-        self.attributes.update({'line':line})
         
     def transform(self, T):
         """Transforms the element.
@@ -362,9 +351,6 @@ class Part(Datastructure):
 
         if 'shape' in self.attributes.keys():
             self.attributes['shape'].transform(T)
-
-        if 'line' in self.attributes.keys():
-            self.attributes['line'].transform(T)
         
 
     def transformed(self, T):
