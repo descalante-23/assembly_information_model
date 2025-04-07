@@ -49,11 +49,24 @@ class Part(Datastructure):
 
     @property
     def __data__(self):
-        return {
+        data = {
             "attributes": self.attributes,
             "key": self.key,
             "frame": self.frame.__data__,
+            "a": None,
+            "b": None,
+            "c": None,
+            "d": None,
         }
+        if self.a:
+            data["a"] = self.a.__data__
+        if self.b:
+            data["b"] = self.b.__data__
+        if self.c:
+            data["c"] = self.c.__data__
+        if self.d:
+            data["d"] = self.d.__data__
+        return data
 
     @classmethod
     def __from_data__(cls, data):
@@ -61,6 +74,18 @@ class Part(Datastructure):
         part.attributes.update(data["attributes"] or {})
         part.key = data["key"]
         part.frame = Frame.__from_data__(data["frame"])
+        part.a = None
+        part.b = None
+        part.c = None
+        part.d = None
+        if data["a"]:
+            part.a = Frame.__from_data__(data["a"])
+        if data["b"]:
+            part.b = Frame.__from_data__(data["b"])
+        if data["c"]:
+            part.c = Frame.__from_data__(data["c"])
+        if data["d"]:
+            part.d = Frame.__from_data__(data["d"])
         return part
 
     def __init__(self, name=None, frame=None, **kwargs):
@@ -69,6 +94,10 @@ class Part(Datastructure):
         self.attributes.update(kwargs)
         self.key = None
         self.frame = frame or Frame.worldXY()
+        self.a = None  # Add attributes for a, b, c, d
+        self.b = None
+        self.c = None
+        self.d = None
     
     @classmethod
     def from_mesh(cls, mesh, name=None, frame=None):
@@ -363,8 +392,15 @@ class Part(Datastructure):
         if 'shape' in self.attributes.keys():
             self.attributes['shape'].transform(T)
 
-        if 'line' in self.attributes.keys():
-            self.attributes['line'].transform(T)
+        # Transform a, b, c, d if they exist
+        if self.a:
+            self.a.transform(T)
+        if self.b:
+            self.b.transform(T)
+        if self.c:
+            self.c.transform(T)
+        if self.d:
+            self.d.transform(T)
         
 
     def transformed(self, T):
@@ -403,5 +439,11 @@ class Part(Datastructure):
             part.attributes.update({'mesh':self.attributes['mesh'].copy()})
         if 'shape' in self.attributes.keys():
             part.attributes.update({'shape':self.attributes['shape'].copy()})
-
+        
+        # Copy a, b, c, d attributes
+        part.a = self.a.copy() if self.a else None
+        part.b = self.b.copy() if self.b else None
+        part.c = self.c.copy() if self.c else None
+        part.d = self.d.copy() if self.d else None
+                
         return part

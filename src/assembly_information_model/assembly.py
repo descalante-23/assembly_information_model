@@ -100,6 +100,16 @@ class Assembly(Datastructure):
         if part.guid in self._parts:
             raise AssemblyError("Part already added to the assembly")
         
+        # Store a, b, c, d as Part attributes
+        if 'a' in kwargs:
+            part.a = kwargs.pop('a')
+        if 'b' in kwargs:
+            part.b = kwargs.pop('b')
+        if 'c' in kwargs:
+            part.c = kwargs.pop('c')
+        if 'd' in kwargs:
+            part.d = kwargs.pop('d')
+
         key = self.graph.add_node(key=key, part=part, x=part.frame.point.x, y=part.frame.point.y, z=part.frame.point.z, **kwargs)
         part.key = key
         self._parts[part.guid] = part.key
